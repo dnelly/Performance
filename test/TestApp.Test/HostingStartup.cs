@@ -16,11 +16,15 @@ namespace MvcBenchmarks.InMemory
     {
         public static string GetProjectDirectoryOf<TStartup>()
         {
-            var libraryManager = DnxPlatformServices.Default.LibraryManager;
-
+            var applicationEnvironment = PlatformServices.Default.Application;
+            var relativePath = Path.Combine("..", "..", "..", "..", "testapp");
             var applicationName = typeof(TStartup).GetTypeInfo().Assembly.GetName().Name;
-            var library = libraryManager.GetLibrary(applicationName);
-            return Path.GetDirectoryName(library.Path);
+
+            return Path.GetFullPath(Path.Combine(
+               applicationEnvironment.ApplicationBasePath,
+               relativePath,
+               applicationName
+            ));
         }
 
         public static WebHostBuilder UseProjectOf<TStartup>(this WebHostBuilder builder)

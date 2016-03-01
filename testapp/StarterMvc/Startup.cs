@@ -49,6 +49,7 @@ namespace StarterMvc
                 .AddDefaultTokenProviders();
 
             services.AddMvc();
+            services.AddMvcDnx();
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();

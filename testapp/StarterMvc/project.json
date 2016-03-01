@@ -13,6 +13,7 @@
     "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.0.0-*",
     "Microsoft.AspNetCore.IISPlatformHandler": "1.0.0-*",
     "Microsoft.AspNetCore.Mvc": "1.0.0-*",
+    "Microsoft.AspNetCore.Mvc.Dnx": "1.0.0-*",
     "Microsoft.AspNetCore.Mvc.TagHelpers": "1.0.0-*",
     "Microsoft.AspNetCore.Server.Kestrel": "1.0.0-*",
     "Microsoft.AspNetCore.StaticFiles": "1.0.0-*",
@@ -29,8 +30,7 @@
     "dotnet-razor-tooling": "1.0.0-*"
   },
   "commands": {
-    "web": "StarterMvc",
-    "ef": "Microsoft.EntityFrameworkCore.Commands"
+    "web": "StarterMvc"
   },
   "frameworks": {
     "dnx451": { },
