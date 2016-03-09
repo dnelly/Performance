@@ -17,11 +17,12 @@ if (! (Test-Path $outputDir)) {
     mkdir $outputDir
 }
 
-$global:outputFile = (Get-ChildItem $outputDir | Select-Object FullName -Last 1).FullName
+$global:outputFile = (Get-ChildItem $outputDir "Results-*.csv" | Select-Object FullName -Last 1).FullName
 
 if ([System.String]::IsNullOrEmpty($global:outputFile)) {
     $runId = Get-Date -Format yyyy-MM-dd-HH-mm-ss
-    $global:outputFile = (Join-Path $outputDir "${runId}.csv")
+    Write-Host "There is no existing run, create a new run and use timestamp ${runId} as runId"
+    $global:outputFile = (Join-Path $outputDir "Results-${runId}.csv")
 }
 
 Write-Host "Tests will be recorded in file: $outputFile"

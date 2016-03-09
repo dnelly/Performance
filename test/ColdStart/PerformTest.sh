@@ -1,10 +1,19 @@
 #!/bin/bash
 
+############ crossplat #################
+if [[ $ostype -eq "msys" ]]; then
+    netstatQuery="netstat -an"
+else
+    netstatQuery="netstat -tuln"
+fi
+########################################
+
+
 RunScenario () {
     local appLocation=$1
     local port=$2
 
-    if [[ `netstat -tuln | grep ":${port} "` ]]; then
+    if [[ `${netstatQuery} | grep ":${port} "` ]]; then
         echo "Port ${port} is in use"
         return
     fi
