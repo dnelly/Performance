@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Benchmarks.Framework;
 using Benchmarks.Utility.Helpers;
 using Benchmarks.Utility.Logging;
+using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
 using Xunit;
@@ -131,7 +132,6 @@ namespace Microsoft.AspNetCore.Tests.Performance
             logger.LogInformation($"Test project is set up at {testProject}");
 
             var testAppStartInfo = DotnetHelper.GetDefaultInstance().BuildStartInfo(testProject, "run");
-
             var process = Process.Start(testAppStartInfo);
             Thread.Sleep(1000);
             process.Kill();
@@ -191,7 +191,6 @@ namespace Microsoft.AspNetCore.Tests.Performance
             var url = $"http://localhost:{port}/";
 
             var client = new HttpClient();
-
             using (Collector.StartCollection())
             {
                 process = Process.Start(testAppStartInfo);
@@ -218,11 +217,11 @@ namespace Microsoft.AspNetCore.Tests.Performance
                     }
                 }
             }
-
             if (process != null && !process.HasExited)
             {
-                logger.LogDebug($"Kill process {process.Id}");
-                process.Kill();
+                var processId = process.Id;
+                process.KillTree();
+                logger.LogDebug($"Kill process {processId}");
             }
 
             if (responseRetrived)
