@@ -31,8 +31,7 @@ namespace PerformanceDashboard
         {
             services.AddMvc();
 
-            services.AddEntityFramework()
-                .AddSqlServer()
+            services.AddEntityFrameworkSqlServer()
                 .AddDbContext<BenchmarkContext>(
                     options => options.UseSqlServer(Configuration["Benchmarks:ResultsDatabase"]));
 

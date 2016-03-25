@@ -43,7 +43,7 @@ namespace Microsoft.AspNetCore.Tests.Performance
             Assert.True(testProject != null, $"Fail to set up test project.");
             logger.LogInformation($"Test project is set up at {testProject}");
 
-            var testAppStartInfo = DnxHelper.GetDefaultInstance().BuildStartInfo(testProject, framework, "run");
+            var testAppStartInfo = DotnetHelper.GetDefaultInstance().BuildStartInfo(testProject, "run");
 
             RunStartup(5000, logger, testAppStartInfo);
         }
@@ -58,13 +58,13 @@ namespace Microsoft.AspNetCore.Tests.Performance
             var testName = $"{sampleName}.{framework}.{nameof(Production_Startup)}";
             var logger = LogUtility.LoggerFactory.CreateLogger(testName);
 
-            var testProject = _sampleManager.GetDnxPublishedSample(sampleName, appliationFramework);
+            var testProject = _sampleManager.GetDotNetPublishedSample(sampleName, appliationFramework);
             Assert.True(testProject != null, $"Fail to set up test project.");
             logger.LogInformation($"Test project is set up at {testProject}");
 
             // --project "%~dp0packages\BasicKestrel\1.0.0\root"
             var root = Path.Combine(testProject, "approot", "packages", sampleName, "1.0.0", "root");
-            var testAppStartInfo = DnxHelper.GetDefaultInstance().BuildStartInfo(testProject, framework, $"--project {root} run");
+            var testAppStartInfo = DotnetHelper.GetDefaultInstance().BuildStartInfo(testProject, $"run --project {root}");
 
             RunStartup(5000, logger, testAppStartInfo);
         }
@@ -130,7 +130,7 @@ namespace Microsoft.AspNetCore.Tests.Performance
             Assert.True(testProject != null, $"Fail to set up test project.");
             logger.LogInformation($"Test project is set up at {testProject}");
 
-            var testAppStartInfo = DnxHelper.GetDefaultInstance().BuildStartInfo(testProject, framework, "run");
+            var testAppStartInfo = DotnetHelper.GetDefaultInstance().BuildStartInfo(testProject, "run");
 
             var process = Process.Start(testAppStartInfo);
             Thread.Sleep(1000);
@@ -170,7 +170,7 @@ namespace Microsoft.AspNetCore.Tests.Performance
         {
             if (string.Equals(runtimeType, "clr", StringComparison.OrdinalIgnoreCase))
             {
-                return "dnx451";
+                return "net451";
             }
             else if (string.Equals(runtimeType, "coreclr", StringComparison.OrdinalIgnoreCase))
             {

@@ -52,7 +52,7 @@ namespace Stress.Framework
             {
                 SiteName = _testName,
                 ApplicationBaseUriHint = baseAddress,
-                PublishTargetFramework = "dnx451"
+                PublishTargetFramework = "net451"
             };
 
             ILogger deployerLogger;

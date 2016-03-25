@@ -19,54 +19,6 @@ namespace Microsoft.AspNetCore.Tests.Performance
         }
 
         [Benchmark(Iterations = 5)]
-        [BenchmarkVariation("DnuPublish_BasicKestrel", "BasicKestrel")]
-        [BenchmarkVariation("DnuPublish_StarterMvc", "StarterMvc")]
-        public void DnuPublish(string sampleName)
-        {
-            var framework = PlatformServices.Default.Runtime.RuntimeType;
-            var testName = $"{sampleName}.{framework}.{nameof(DnuPublish)}";
-            var testProject = _sampleManager.GetRestoredSample(sampleName);
-            Assert.True(testProject != null, $"Fail to set up test project.");
-
-            var testOutput = Path.Combine(PathHelper.GetNewTempFolder(), testName);
-            Directory.CreateDirectory(testOutput);
-
-            using (Collector.StartCollection())
-            {
-                DnxHelper.GetDefaultInstance().Publish(
-                    workingDir: testProject,
-                    outputDir: testOutput,
-                    framework: framework,
-                    nosource: false,
-                    quiet: true);
-            }
-        }
-
-        [Benchmark(Iterations = 5)]
-        [BenchmarkVariation("DnuPublish_BasicKestrel", "BasicKestrel")]
-        [BenchmarkVariation("DnuPublish_StarterMvc", "StarterMvc")]
-        public void DnuPublishNoSource(string sampleName)
-        {
-            var framework = PlatformServices.Default.Runtime.RuntimeType;
-            var testName = $"{sampleName}.{framework}.{nameof(DnuPublishNoSource)}";
-            var testProject = _sampleManager.GetRestoredSample(sampleName);
-            Assert.True(testProject != null, $"Fail to set up test project.");
-
-            var testOutput = Path.Combine(PathHelper.GetNewTempFolder(), testName);
-            Directory.CreateDirectory(testOutput);
-
-            using (Collector.StartCollection())
-            {
-                DnxHelper.GetDefaultInstance().Publish(
-                    workingDir: testProject,
-                    outputDir: testOutput,
-                    framework: framework,
-                    nosource: true,
-                    quiet: true);
-            }
-        }
-
-        [Benchmark(Iterations = 5)]
         [BenchmarkVariation("DotnetPublish_BasicKestrel", "BasicKestrel")]
         [BenchmarkVariation("DotnetPublish_StarterMvc", "StarterMvc")]
         public void DotnetPublish(string sampleName)

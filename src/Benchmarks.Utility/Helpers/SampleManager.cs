@@ -25,14 +25,6 @@ namespace Benchmarks.Utility.Helpers
             return sample.Valid ? sample.SamplePath : null;
         }
 
-        public string GetDnxPublishedSample(string name, string framework)
-        {
-            var sample = GetOrAdd(DnxPublishedSample.GetUniqueName(name, framework), DnxPublishedSample.Create);
-            sample.Initialize();
-
-            return sample.Valid ? sample.SamplePath : null;
-        }
-
         public string GetDotNetPublishedSample(string name, string framework)
         {
             var sample = GetOrAdd(DotNetPublishedSample.GetUniqueName(name, framework), DotNetPublishedSample.Create);
@@ -106,46 +98,7 @@ namespace Benchmarks.Utility.Helpers
                 Directory.CreateDirectory(target);
 
                 CommandLineRunner.GetDefaultInstance().Execute($"robocopy {SourcePath} {target} /E /S /XD node_modules /XF project.lock.json");
-                if (!DnxHelper.GetDefaultInstance().Restore(target, "coreclr", quiet: true))
-                {
-                    Directory.Delete(target, recursive: true);
-                    return false;
-                }
-
-                SamplePath = target;
-                return true;
-            }
-        }
-
-        private class DnxPublishedSample : SampleEntry
-        {
-            private const char _separator = '|';
-
-            private DnxPublishedSample(string name) : base(name) { }
-
-            public static DnxPublishedSample Create(string name) => new DnxPublishedSample(name);
-
-            public static string GetUniqueName(string sampleName, string framework) => $"{sampleName}{_separator}{framework}";
-
-            protected override bool doInitialization()
-            {
-                var parts = Name.Split(_separator);
-                SourcePath = PathHelper.GetTestAppFolder(parts[0]);
-                if (SourcePath == null)
-                {
-                    return false;
-                }
-
-                var dnx = DnxHelper.GetDefaultInstance();
-                if (!dnx.Restore(SourcePath, "coreclr", quiet: true))
-                {
-                    return false;
-                }
-
-                var target = Path.Combine(PathHelper.GetNewTempFolder(), parts[0]);
-                Directory.CreateDirectory(target);
-
-                if (!dnx.Publish(SourcePath, parts[1], target, nosource: true, quiet: true))
+                if (!DotnetHelper.GetDefaultInstance().Restore(target, quiet: true))
                 {
                     Directory.Delete(target, recursive: true);
                     return false;
@@ -189,7 +142,7 @@ namespace Benchmarks.Utility.Helpers
                     Directory.Delete(target, recursive: true);
                     return false;
                 }
-
+                
                 SamplePath = target;
                 return true;
             }

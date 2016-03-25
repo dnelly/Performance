@@ -67,8 +67,6 @@ namespace Microsoft.AspNetCore.Tests.Performance
         [InlineData("StarterMvc", "coreclr")]
         public void PublishAndRun(string sampleName, string framework)
         {
-            DnxHelper.GetDefaultInstance().GetDnxExecutable(framework);
-
             _log = _loggerFactory.CreateLogger($"{nameof(AntaresStartup)}.{nameof(PublishAndRun)}.{sampleName}.{framework}");
             DeployTestSite(sampleName, framework);
 
@@ -112,7 +110,7 @@ namespace Microsoft.AspNetCore.Tests.Performance
 
             runner.Execute($"git clean -xdff .", sourcePath);
             Assert.NotEqual(-1, runner.Execute($"robocopy {sourcePath} {_testsitesource} /E /S /XD node_modules")); // robcopy doesn't return 0
-            File.WriteAllText(Path.Combine(_testsitesource, "global.json"), DnxHelper.GetDefaultInstance().BuildGlobalJson(framework));
+            File.WriteAllText(Path.Combine(_testsitesource, "global.json"), DotnetHelper.GetDefaultInstance().BuildGlobalJson());
             File.Copy(PathHelper.GetNuGetConfig(), Path.Combine(_testsitesource, "NuGet.config"));
 
             _log.LogInformation($"Testsite sources are copied to {_testsitesource}.");

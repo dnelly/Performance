@@ -1,6 +1,7 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -21,8 +22,8 @@ namespace Benchmarks.Utility.Helpers
             string appbasePath,
             string argument)
         {
-            var dnxPath = GetDotnetExecutable();
-            var psi = new ProcessStartInfo(dnxPath, argument)
+            var dotnetPath = GetDotnetExecutable();
+            var psi = new ProcessStartInfo(dotnetPath, argument)
             {
                 WorkingDirectory = appbasePath,
                 UseShellExecute = false
@@ -89,15 +90,26 @@ namespace Benchmarks.Utility.Helpers
 
         public string GetDotnetExecutable()
         {
-            var dnxPath = GetDotnetPath();
-            if (dnxPath != null)
+            var dotnetPath = GetDotnetPath();
+            if (dotnetPath != null)
             {
-                return Path.Combine(dnxPath, _executablePath);
+                return Path.Combine(dotnetPath, _executablePath);
             }
             else
             {
                 return null;
             }
+        }
+
+        public string BuildGlobalJson()
+        {
+            return JsonConvert.SerializeObject(new
+            {
+                projects = new[]
+                {
+                    "."
+                }
+            });
         }
     }
 }
