@@ -50,27 +50,6 @@ namespace Microsoft.AspNetCore.Tests.Performance
         }
 
         [Benchmark(Iterations = 10, WarmupIterations = 0)]
-        [BenchmarkVariation("BasicKestrel_ProductionScenario", "BasicKestrel")]
-        [BenchmarkVariation("StarterMvc_ProductionScenario", "StarterMvc")]
-        public void Production_Startup(string sampleName)
-        {
-            var framework = PlatformServices.Default.Runtime.RuntimeType;
-            var appliationFramework = GetFrameworkName(framework);
-            var testName = $"{sampleName}.{framework}.{nameof(Production_Startup)}";
-            var logger = LogUtility.LoggerFactory.CreateLogger(testName);
-
-            var testProject = _sampleManager.GetDotNetPublishedSample(sampleName, appliationFramework);
-            Assert.True(testProject != null, $"Fail to set up test project.");
-            logger.LogInformation($"Test project is set up at {testProject}");
-
-            // --project "%~dp0packages\BasicKestrel\1.0.0\root"
-            var root = Path.Combine(testProject, "approot", "packages", sampleName, "1.0.0", "root");
-            var testAppStartInfo = DotnetHelper.GetDefaultInstance().BuildStartInfo(testProject, $"run --project {root}");
-
-            RunStartup(5000, logger, testAppStartInfo);
-        }
-
-        [Benchmark(Iterations = 10, WarmupIterations = 0)]
         [BenchmarkVariation("BasicKestrel_DotNet_ProductionScenario", "BasicKestrel")]
         public void Production_DotNet_Startup(string sampleName)
         {
