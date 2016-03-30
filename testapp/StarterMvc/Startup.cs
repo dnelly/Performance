@@ -83,10 +83,6 @@ namespace StarterMvc
                 }
             }
 
-            var options = new IISPlatformHandlerOptions();
-            options.AuthenticationDescriptions.Clear();
-            app.UseIISPlatformHandler(options);
-
             app.UseStaticFiles();
 
             app.UseIdentity();

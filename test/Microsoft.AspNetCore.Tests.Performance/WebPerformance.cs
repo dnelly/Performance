@@ -91,10 +91,20 @@ namespace Microsoft.AspNetCore.Tests.Performance
             var client = new HttpClient();
             client.GetAsync("http://localhost:5000/").Result.EnsureSuccessStatusCode();
 
-            using (Collector.StartCollection())
+            try
             {
-                process.StandardInput.Write("\x3");
-                Assert.True(process.WaitForExit((int)TimeSpan.FromSeconds(30).TotalMilliseconds));
+                using (Collector.StartCollection())
+                {
+                    process.StandardInput.Write("\x3");
+                    Assert.True(process.WaitForExit((int)TimeSpan.FromSeconds(30).TotalMilliseconds));
+                }
+            }
+            finally
+            {
+                if(process != null && !process.HasExited)
+                {
+                    process.KillTree();
+                }
             }
         }
 
@@ -113,7 +123,7 @@ namespace Microsoft.AspNetCore.Tests.Performance
             var testAppStartInfo = DotnetHelper.GetDefaultInstance().BuildStartInfo(testProject, "run");
             var process = Process.Start(testAppStartInfo);
             Thread.Sleep(1000);
-            process.Kill();
+            process.KillTree();
             logger.LogInformation("Run server before updating");
 
             // update source code
