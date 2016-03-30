@@ -91,20 +91,9 @@ namespace Microsoft.AspNetCore.Tests.Performance
             var client = new HttpClient();
             client.GetAsync("http://localhost:5000/").Result.EnsureSuccessStatusCode();
 
-            try
+            if(process != null && !process.HasExited)
             {
-                using (Collector.StartCollection())
-                {
-                    process.StandardInput.Write("\x3");
-                    Assert.True(process.WaitForExit((int)TimeSpan.FromSeconds(30).TotalMilliseconds));
-                }
-            }
-            finally
-            {
-                if(process != null && !process.HasExited)
-                {
-                    process.KillTree();
-                }
+                process.KillTree();
             }
         }
 
