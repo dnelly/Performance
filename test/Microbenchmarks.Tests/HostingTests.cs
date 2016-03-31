@@ -39,7 +39,7 @@ namespace Microbenchmarks.Tests
 
         private void ConfigureTestServices(IServiceCollection services)
         {
-            services.AddTransient<IServerLoader, TestServerLoader>();
+            services.AddSingleton(new TestServerFactory());
             services.AddSingleton(Collector);
         }
 
@@ -65,55 +65,32 @@ namespace Microbenchmarks.Tests
             }
         }
 
-        private class TestServerLoader : IServerLoader
+        public class TestServerFactory : IServerFactory
         {
-            private readonly IServerLoader _wrappedServerLoader;
-
-            public TestServerLoader(IServiceProvider services)
+            public TestServerFactory()
             {
-                _wrappedServerLoader = new ServerLoader(services);
             }
 
-            public IServerFactory LoadServerFactory(string assemblyName)
+            public IServer CreateServer(IConfiguration configuration)
             {
-                var factory = _wrappedServerLoader.LoadServerFactory(assemblyName);
-
-                return new TestServerFactory(factory);
+                return new TestServer();
             }
 
-            private class TestServerFactory : IServerFactory
+            private class TestServer : IServer
             {
-                private readonly IServerFactory _wrappedServerFactory;
-
-                public TestServerFactory(IServerFactory wrappedServerFactory)
+                public TestServer()
                 {
-                    _wrappedServerFactory = wrappedServerFactory;
+                }
+            
+                public void Dispose()
+                {
                 }
 
-                public IServer CreateServer(IConfiguration configuration)
+                public IFeatureCollection Features { get; }
+
+                public void Start<TContext>(IHttpApplication<TContext> application)
                 {
-                    var server = _wrappedServerFactory.CreateServer(configuration);
-
-                    return new TestServer(server);
-                }
-
-                private class TestServer : IServer
-                {
-                    private readonly IServer _wrappedServer;
-
-                    public TestServer(IServer wrappedServer)
-                    {
-                        _wrappedServer = wrappedServer;
-                    }
-
-                    public IFeatureCollection Features => _wrappedServer.Features;
-
-                    public void Dispose() => _wrappedServer.Dispose();
-
-                    public void Start<TContext>(IHttpApplication<TContext> application)
-                    {
-                        // No-op, we don't want to actually start the server.
-                    }
+                    // No-op, we don't want to actually start the server.
                 }
             }
         }
