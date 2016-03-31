@@ -42,7 +42,7 @@ namespace Benchmarks.Utility.Helpers
                 var source = _sampleManager.GetRestoredSample(sample.Item1);
                 var parameters = new DeploymentParameters(source, ServerType.IIS, sample.Item2, RuntimeArchitecture.x64)
                 {
-                    PublishTargetFramework = "dnx451"
+                    PublishTargetFramework = "net451"
                 };
 
                 // This is a quick fix to turn around the build before the fix in Hosting eventually goes online
