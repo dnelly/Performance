@@ -35,9 +35,7 @@ namespace MultipartPostClient
             try
             {
                 var program = new Program();
-                program.WarmupConnection().Wait();
-
-                for (var i = 1; i < 10; ++i)
+                for (var i = 1; i <= 10; ++i)
                 {
                     PrintLine($"Iteration { i }");
 
@@ -62,21 +60,6 @@ namespace MultipartPostClient
                 Console.Error.WriteLine(e.Message);
             }
             PrintLine("Done.");
-        }
-
-        private async Task WarmupConnection()
-        {
-            PrintLine("Hitting home");
-            using (var client = new HttpClient())
-            {
-                var response = await client.GetAsync(_apiEndpoint);
-                if (!response.IsSuccessStatusCode)
-                {
-                    var errorMessage = "Request failed: " + (int) response.StatusCode + " " + response.ReasonPhrase;
-                    throw new Exception(errorMessage + Environment.NewLine + await response.Content.ReadAsStringAsync());
-                }
-            }
-            PrintLine("Success");
         }
 
         public async Task SendLoad(Func<string, RandomDataStreamContent> contentGenerator, int filesToAdd = 1)
@@ -167,7 +150,7 @@ namespace MultipartPostClient
 
         private RandomDataStreamContent GenerateFileContent(string fileName, long fileSize, DataGenerationType type)
         {
-            var fileContent = new RandomDataStreamContent(type, fileSize);
+            var fileContent = new RandomDataStreamContent(type, fileSize, fileName);
             fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
             {
                 Name = "\"files\"",

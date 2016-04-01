@@ -3,10 +3,8 @@
 
 using System;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace MultipartPost.Controllers
 {
@@ -26,7 +24,7 @@ namespace MultipartPost.Controllers
             PrintLine($"File count: { form.Files.Count }");
             foreach(var file in form.Files)
             {
-                PrintLine($"Read { file.Length } bytes");
+                PrintLine($"Read { file.Length } bytes [{ file.FileName }]");
             }
 
             PrintLine("Done");
