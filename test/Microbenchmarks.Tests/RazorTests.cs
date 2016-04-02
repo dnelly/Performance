@@ -54,7 +54,8 @@ namespace Microbenchmarks.Tests.Razor
         {
             // Arrange
             var chunkTreeCache = new DefaultChunkTreeCache(new TestFileProvider());
-            var razorHost = new MvcRazorHost(chunkTreeCache)
+            var resolver = new TagHelperDescriptorResolver(designTime: false);
+            var razorHost = new MvcRazorHost(chunkTreeCache, resolver)
             {
                 DesignTimeMode = designTime
             };

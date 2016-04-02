@@ -7,6 +7,7 @@ using System.IO;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.Directives;
 using Microsoft.AspNetCore.Razor;
+using Microsoft.AspNetCore.Razor.Runtime.TagHelpers;
 using Microsoft.Extensions.FileProviders;
 
 namespace RazorCodeGenerator
@@ -50,7 +51,9 @@ namespace RazorCodeGenerator
             var fileNameNoExtension = Path.GetFileNameWithoutExtension(fileName);
             var codeLang = new CSharpRazorCodeLanguage();
 
-            var host = new MvcRazorHost(new DefaultChunkTreeCache(new PhysicalFileProvider(basePath)));
+            var chunkTreeCache = new DefaultChunkTreeCache(new PhysicalFileProvider(basePath));
+            var resolver = new TagHelperDescriptorResolver(designTime: false);
+            var host = new MvcRazorHost(chunkTreeCache, resolver);
             var engine = new RazorTemplateEngine(host);
 
             Console.WriteLine("Press the ANY key to start.");
