@@ -4,6 +4,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Runtime;
+using Microsoft.Extensions.Logging;
 
 namespace HelloWorldMvc
 {
@@ -27,6 +30,15 @@ namespace HelloWorldMvc
                 .UseIIS()
                 .UseStartup<Startup>()
                 .Build();
+
+            if(GCSettings.IsServerGC)
+            {
+               Console.WriteLine("Server GC");
+            }
+            else
+            {
+                Console.WriteLine("Workstation GC");
+            }
 
             host.Run();
         }
